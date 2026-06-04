@@ -2,3 +2,5 @@
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("A linux DRM/KMS driver for old S3 graphics cards.");
+MODULE_AUTHOR("kopi9999");
+MODULE_VERSION("0.1.0");
