@@ -9,6 +9,8 @@
 #define S3VDRM_DRV_H
 
 #include <drm/drm_atomic.h>
+#include <drm/drm_drv.h>
+#include <drm/drm_module.h>
 
 struct s3vdrm_device {
   struct drm_device dev;
