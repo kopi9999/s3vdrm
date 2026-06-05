@@ -1,6 +1,10 @@
 #include <linux/module.h>
+#include <linux/pci.h>
 
-MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("A linux DRM/KMS driver for old S3 graphics cards.");
-MODULE_AUTHOR("kopi9999");
-MODULE_VERSION("0.1.0");
+#include "s3vdrm_drv.h"
+#include "../s3vdrm_drvinfo.h"
+
+MODULE_LICENSE(S3VDRM_LICENSE);
+MODULE_DESCRIPTION(S3VDRM_DESC);
+MODULE_AUTHOR(S3VDRM_AUTHOR);
+MODULE_VERSION(XSTR(S3VDRM_MAJOR_VER) "." XSTR(S3VDRM_MINOR_VER) "." XSTR(S3VDRM_PATCHLEVEL));
