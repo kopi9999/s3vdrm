@@ -7,6 +7,7 @@
 #ifndef S3VDRM_DRVINFO_H
 #define S3VDRM_DRVINFO_H
 
+#define S3VDRM_NAME "s3vdrm"
 #define S3VDRM_LICENSE "GPL"
 #define S3VDRM_DESC "A linux DRM/KMS driver for old S3 graphics cards."
 #define S3VDRM_AUTHOR "kopi9999"

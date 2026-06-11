@@ -1,4 +1,3 @@
-
 /*
  * SPDX_License_identifier: GPL-3.0-or-later
  * Copyright (c) 2026 kopi9999
@@ -11,6 +10,9 @@
 #include <drm/drm_atomic.h>
 #include <drm/drm_drv.h>
 #include <drm/drm_module.h>
+#include <drm/drm_managed.h>
+#include <drm/drm_atomic_helper.h>
+#include <drm/drm_probe_helper.h>
 
 struct s3vdrm_device {
   struct drm_device dev;
