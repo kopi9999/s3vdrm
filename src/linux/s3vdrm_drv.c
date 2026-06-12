@@ -42,12 +42,12 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
     return PTR_ERR(s3vdrm);
   
   drm = &s3vdrm->dev;
+  pci_set_drvdata(pdev, drm);
 
   // init here
   
-  drm_mode_config_reset(drm);
+  drm_mode_config_init(drm);
   
-  pci_set_drvdata(pdev, drm);
   ret = drm_dev_register(drm, 0);
   if (ret)
     return ret;
@@ -56,14 +56,16 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
 }
 
 static void s3vdrm_pci_remove(struct pci_dev *pdev) {
-  struct drm_device *dev = pci_get_drvdata(pdev);
-  
-  drm_dev_unplug(dev);
-  drm_atomic_helper_shutdown(dev);
+  // managed by devm
 }
 
 static void s3vdrm_pci_shutdown(struct pci_dev *pdev) {
-   drm_atomic_helper_shutdown(pci_get_drvdata(pdev));
+  struct drm_device *drm = pci_get_drvdata(pdev);
+
+  if (!drm) // should not be needed, just in case
+    return;
+  
+  drm_atomic_helper_shutdown(drm);
 }
 
 static struct pci_device_id s3vdrm_pci_device_ids[] = {
