@@ -67,8 +67,9 @@ static void s3vdrm_pci_shutdown(struct pci_dev *pdev) {
 }
 
 static struct pci_device_id s3vdrm_pci_device_ids[] = {
-  {.vendor = S3VDRM_S3_VENDOR_ID, .device = S3VDRM_VIRGE_DEV_ID},
-  {.vendor = S3VDRM_S3_VENDOR_ID, .device = S3VDRM_VIRGE_DX_GX_DEV_ID},
+  { PCI_DEVICE(S3VDRM_S3_VENDOR_ID, S3VDRM_VIRGE_DEV_ID) },
+  { PCI_DEVICE(S3VDRM_S3_VENDOR_ID, S3VDRM_VIRGE_DX_GX_DEV_ID) },
+  {}
 };
 
 static struct pci_driver s3vdrm_pci_driver = {
@@ -80,6 +81,7 @@ static struct pci_driver s3vdrm_pci_driver = {
 };
 
 drm_module_pci_driver(s3vdrm_pci_driver);
+MODULE_DEVICE_TABLE(pci, s3vdrm_pci_device_ids);
 
 MODULE_LICENSE(S3VDRM_LICENSE);
 MODULE_DESCRIPTION(S3VDRM_DESC);
