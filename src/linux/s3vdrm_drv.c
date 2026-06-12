@@ -11,6 +11,7 @@
 #include "../s3vdrm_drvinfo.h"
 #include "../s3vdrm_dev_ids.h"
 
+
 static const struct drm_driver s3vdrm_driver = {
   .name = S3VDRM_NAME,
   .desc = S3VDRM_DESC,
@@ -21,44 +22,53 @@ static const struct drm_driver s3vdrm_driver = {
   .driver_features = DRIVER_MODESET | DRIVER_ATOMIC | DRIVER_GEM,
 };
 
+/***
+ ** mandatory
+ */
 static int s3vdrm_pci_probe(struct pci_dev *pdev,
                             const struct pci_device_id *ent) {
   struct drm_device *drm;
-  struct s3vdrm_device *s3vdrm;
+  struct s3vdrm_device *s3v;
   int ret;
 
   ret = pcim_enable_device(pdev);
-  if (ret)
-    return ret;
+  if (ret) {return ret;}
   
   ret = pcim_request_all_regions(pdev, S3VDRM_NAME);
-  if (ret)
-    return ret;
+  if (ret) {return ret;}
   
   ret = -ENOMEM;
-  s3vdrm = devm_drm_dev_alloc(&pdev->dev, &s3vdrm_driver,
-			      struct s3vdrm_device, dev);
-  if (IS_ERR(s3vdrm))
-    return PTR_ERR(s3vdrm);
+  s3v = devm_drm_dev_alloc(&pdev->dev, &s3vdrm_driver,
+			      struct s3vdrm_device, drm);
+  if (IS_ERR(s3v)) {return PTR_ERR(s3v);}
   
-  drm = &s3vdrm->dev;
-  pci_set_drvdata(pdev, drm);
+  drm = &s3v->drm;
 
-  // init here
+  // start of init
+
+  s3vdrm_mode_init(s3v);
   
-  drm_mode_config_init(drm);
+  // end of init
   
+  drm_mode_config_reset(drm);
+
+  pci_set_drvdata(pdev, drm);
   ret = drm_dev_register(drm, 0);
-  if (ret)
-    return ret;
+  if (ret) {return ret;}
   
   return 0;  
 }
 
+/***
+ ** mandatory
+ */
 static void s3vdrm_pci_remove(struct pci_dev *pdev) {
   // managed by devm
 }
 
+/***
+ ** mandatory
+ */
 static void s3vdrm_pci_shutdown(struct pci_dev *pdev) {
   struct drm_device *drm = pci_get_drvdata(pdev);
 
@@ -75,7 +85,7 @@ static struct pci_device_id s3vdrm_pci_device_ids[] = {
 };
 
 static struct pci_driver s3vdrm_pci_driver = {
-    .name = "s3vdrm",
+    .name = S3VDRM_NAME,
     .id_table = s3vdrm_pci_device_ids,
     .probe = s3vdrm_pci_probe,
     .remove = s3vdrm_pci_remove,

@@ -15,7 +15,13 @@
 #include <drm/drm_probe_helper.h>
 
 struct s3vdrm_device {
-  struct drm_device dev;
+  struct drm_device drm;
 };
+
+/***
+ ** driver exported functions
+ */
+
+int s3vdrm_mode_init(struct s3vdrm_device *s3v);
 
 #endif
