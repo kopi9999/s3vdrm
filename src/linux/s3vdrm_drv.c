@@ -46,7 +46,8 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
 
   // start of init
 
-  s3vdrm_mode_init(s3v);
+  ret = s3vdrm_mode_init(s3v);
+  if (ret) {return ret;}
   
   // end of init
   
