@@ -44,6 +44,13 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
   
   drm = &s3v->drm;
 
+  // map mmio
+
+  s3v->mmio = pcim_iomap(pdev, 0, 0);
+  if (!s3v->mmio) {return -ENOMEM;}
+
+  pr_info("mapped mmio at %p of length %p", (void *) pci_resource_start(pdev, 0), (void *) pci_resource_end(pdev, 0) );
+
   // start of init
 
   ret = s3vdrm_mode_init(s3v);

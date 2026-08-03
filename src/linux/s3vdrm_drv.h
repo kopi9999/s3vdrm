@@ -16,6 +16,7 @@
 
 struct s3vdrm_device {
   struct drm_device drm;
+  void __iomem * mmio;
 };
 
 /***
