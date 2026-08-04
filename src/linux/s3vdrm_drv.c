@@ -27,7 +27,6 @@ static const struct drm_driver s3vdrm_driver = {
  */
 static int s3vdrm_pci_probe(struct pci_dev *pdev,
                             const struct pci_device_id *ent) {
-  struct drm_device *drm;
   struct s3vdrm_device *s3v;
   int ret;
 
@@ -42,14 +41,10 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
 			      struct s3vdrm_device, drm);
   if (IS_ERR(s3v)) {return PTR_ERR(s3v);}
   
-  drm = &s3v->drm;
-
   // map mmio
 
   s3v->mmio = pcim_iomap(pdev, 0, 0);
   if (!s3v->mmio) {return -ENOMEM;}
-
-  pr_info("mapped mmio at %p of length %p", (void *) pci_resource_start(pdev, 0), (void *) pci_resource_end(pdev, 0) );
 
   // start of init
 
@@ -58,10 +53,10 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
   
   // end of init
   
-  drm_mode_config_reset(drm);
+  drm_mode_config_reset(&s3v->drm);
 
-  pci_set_drvdata(pdev, drm);
-  ret = drm_dev_register(drm, 0);
+  pci_set_drvdata(pdev, s3v);
+  ret = drm_dev_register(&s3v->drm, 0);
   if (ret) {return ret;}
   
   return 0;  
@@ -71,19 +66,25 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
  ** mandatory
  */
 static void s3vdrm_pci_remove(struct pci_dev *pdev) {
-  // managed by devm
+  struct s3vdrm_device *s3v = pci_get_drvdata(pdev);
+
+  if (!s3v) // should not be needed, just in case
+    return;
+  
+  pcim_iounmap(pdev, s3v->mmio);
+  // rest managed by devm
 }
 
 /***
  ** mandatory
  */
 static void s3vdrm_pci_shutdown(struct pci_dev *pdev) {
-  struct drm_device *drm = pci_get_drvdata(pdev);
+  struct s3vdrm_device *s3v = pci_get_drvdata(pdev);
 
-  if (!drm) // should not be needed, just in case
+  if (!s3v) // should not be needed, just in case
     return;
   
-  drm_atomic_helper_shutdown(drm);
+  drm_atomic_helper_shutdown(&s3v->drm);
 }
 
 static struct pci_device_id s3vdrm_pci_device_ids[] = {
