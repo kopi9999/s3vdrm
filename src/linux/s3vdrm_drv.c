@@ -70,10 +70,16 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
  */
 static void s3vdrm_pci_remove(struct pci_dev *pdev) {
   struct s3vdrm_device *s3v = pci_get_drvdata(pdev);
+  struct drm_device *drm;
 
   if (!s3v) // should not be needed, just in case
     return;
+
+  drm = &s3v->drm;
   
+  drm_dev_unregister(drm);
+
+  drm_atomic_helper_shutdown(drm);
   pcim_iounmap(pdev, s3v->mmio);
   // rest managed by devm
 }
