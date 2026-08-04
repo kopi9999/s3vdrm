@@ -28,6 +28,7 @@ static const struct drm_driver s3vdrm_driver = {
 static int s3vdrm_pci_probe(struct pci_dev *pdev,
                             const struct pci_device_id *ent) {
   struct s3vdrm_device *s3v;
+  struct drm_device *drm;
   int ret;
 
   ret = pcim_enable_device(pdev);
@@ -41,6 +42,8 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
 			      struct s3vdrm_device, drm);
   if (IS_ERR(s3v)) {return PTR_ERR(s3v);}
   
+  drm = &s3v->drm;
+  
   // map mmio
 
   s3v->mmio = pcim_iomap(pdev, 0, 0);
@@ -53,10 +56,10 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
   
   // end of init
   
-  drm_mode_config_reset(&s3v->drm);
+  drm_mode_config_reset(drm);
 
   pci_set_drvdata(pdev, s3v);
-  ret = drm_dev_register(&s3v->drm, 0);
+  ret = drm_dev_register(drm, 0);
   if (ret) {return ret;}
   
   return 0;  
