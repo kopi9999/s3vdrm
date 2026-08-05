@@ -79,7 +79,7 @@ static void s3vdrm_pci_remove(struct pci_dev *pdev) {
   
   drm_dev_unregister(drm);
 
-  drm_atomic_helper_shutdown(drm);
+  //drm_atomic_helper_shutdown(drm);   null pointer dereference due to unfinished drm funcs
   pcim_iounmap(pdev, s3v->mmio);
   // rest managed by devm
 }
