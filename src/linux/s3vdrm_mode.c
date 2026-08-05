@@ -27,6 +27,12 @@ int s3vdrm_mode_init(struct s3vdrm_device *s3v) {
   drm->mode_config.prefer_shadow = 0;
   drm->mode_config.preferred_depth = 8;
   drm->mode_config.funcs = &s3vdrm_mode_config_funcs;
+
+  s3vdrm_hw_probe(s3v->mmio, &s3v->status);
+
+  pr_info("misc register status: %u", s3v->status.regs.vga_regs.misc);
+  pr_info("cr0 register status: %u", s3v->status.regs.vga_regs.cr0);
+  pr_info("cr36 register status: %u", s3v->status.regs.vga_regs.cr36);
   
   return 0;
 }

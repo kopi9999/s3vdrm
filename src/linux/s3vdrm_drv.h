@@ -14,8 +14,11 @@
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_probe_helper.h>
 
+#include "../hw/s3vdrm_hw.h"
+
 struct s3vdrm_device {
   struct drm_device drm;
+  struct s3v_status status;
   void __iomem * mmio;
 };
 
