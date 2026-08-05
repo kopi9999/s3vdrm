@@ -14,11 +14,11 @@
 #if 1 // add here detection of endianess
   #define S3VDRM_ENDIANESS_OFFSET 0
 #else
-  #define S3VDRM_ENDIANESS_OFFSET 0x200 0000
+  #define S3VDRM_ENDIANESS_OFFSET 0x2000000
 #endif
 
-#define S3VDRM_IMAGE_TRANSFER_OFFSET  0x100 0000
-#define S3VDRM_CONF_REG_OFFSET        0x100 8000
+#define S3VDRM_IMAGE_TRANSFER_OFFSET  0x1000000
+#define S3VDRM_CONF_REG_OFFSET        0x1008000
 
 /***
  ** relative offsets

@@ -7,7 +7,7 @@
 #ifndef S3VDRM_COMMON_STRUCTS_H
 #define S3VDRM_COMMON_STRUCTS_H
 
-#include <linux/module.h>
+#include "s3vdrm_types.h"
 
 struct s3v_vga_regs {
   u8 cr0, cr1, cr2, cr3, cr4, cr5, cr6, cr7, cr8, cr9;
