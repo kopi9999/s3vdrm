@@ -9,8 +9,21 @@
 
 #include "s3vdrm_mem_offsets.h"
 
+/***
+ ** kernel specific macros
+ */
+
 #include <linux/pci.h>
 #define S3VDRM_MMIO_R8(addr) ioread8(addr)
 #define S3VDRM_MMIO_W8(addr, val) iowrite8(val, addr)
+
+/***
+ ** register access helpers
+ */
+
+#define S3VDRM_REG_R8(base, offset)				\
+  S3VDRM_MMIO_R8(base + S3VDRM_CONF_REG_OFFSET + offset)
+#define S3VDRM_REG_W8(base, offset, val)			\
+  S3VDRM_MMIO_W8(base + S3VDRM_CONF_REG_OFFSET + offset, val)
 
 #endif

@@ -36,7 +36,7 @@
  ** relative offsets of relative offsets :)
  */
 
-#define S3VDRM_COLOR_EM_SHIFT 0x20 // by bit 0 of MISC
+#define S3VDRM_REG_SHIFT 0x20 // by bit 0 of MISC
 
 
 #endif // S3VDRM_MEM_OFFSETS_H
