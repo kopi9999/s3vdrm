@@ -18,6 +18,7 @@
 // s3vdrm_hw_io_helpers.c
 u8   S3vdrm_vga_r8(void* base, u8 id, bool shift);
 void S3vdrm_vga_w8(void* base, u8 id, bool shift, u8 val);
+void S3vdrm_enable_mmio(void);
 
 // s3vdrm_hw_probe.c
 void s3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat);

@@ -14,8 +14,11 @@
  */
 
 #include <linux/pci.h>
+#include <linux/io.h>
 #define S3VDRM_MMIO_R8(addr) ioread8(addr)
 #define S3VDRM_MMIO_W8(addr, val) iowrite8(val, addr)
+#define S3VDRM_IO_R8(addr) inb(addr)
+#define S3VDRM_IO_W8(addr, val) outb(val, addr)
 
 /***
  ** register access helpers
