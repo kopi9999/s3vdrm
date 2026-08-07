@@ -25,7 +25,7 @@ void S3vdrm_vga_w8(void* base, u8 id, bool shift, u8 val) {
 void S3vdrm_enable_mmio(void) {
   u8 shift, tmp;
 
-  shift = S3VDRM_IO_R8(S3VDRM_MISC_REG_R) & 0x00000001; //bit 0 enables shift
+  shift = S3VDRM_IO_R8(S3VDRM_MISC_REG_R) & 0b00000001; //bit 0 enables shift
   if (shift) {shift = S3VDRM_REG_SHIFT;}
 
   S3VDRM_IO_W8(S3VDRM_CRTC_INDEX + shift, 0x39);

@@ -11,7 +11,7 @@ void s3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat) {
 
   s3v_stat->regs.vga_regs.misc = S3VDRM_REG_R8(base, S3VDRM_MISC_REG_R);
   
-  if (!(s3v_stat->regs.vga_regs.misc & 0x00010000)) { //ensure working i/o
+  if (!(s3v_stat->regs.vga_regs.misc & 0b00010000)) { //ensure working i/o
     S3vdrm_enable_mmio();
     s3v_stat->regs.vga_regs.misc = S3VDRM_REG_R8(base, S3VDRM_MISC_REG_R);
   }
