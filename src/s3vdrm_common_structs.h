@@ -9,6 +9,20 @@
 
 #include "s3vdrm_types.h"
 
+/***
+ ** enums
+ */
+
+enum s3vdrm_card_type {
+  BAD_CARD,
+  VIRGE,
+  VIRGE_DX_GX
+};
+
+/***
+ ** structs
+ */
+
 struct s3v_vga_regs {
   u8 misc;
   
@@ -25,6 +39,9 @@ struct s3v_regs {
 
 struct s3v_status {
   struct s3v_regs regs;
+  enum s3vdrm_card_type card_type; // type of detected card 
+  bool shift;                      // crtc regs address shift
+  u32 vram_size;
 };
 
 #endif

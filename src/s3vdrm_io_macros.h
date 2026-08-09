@@ -17,6 +17,8 @@
 #include <linux/io.h>
 #define S3VDRM_MMIO_R8(addr) ioread8(addr)
 #define S3VDRM_MMIO_W8(addr, val) iowrite8(val, addr)
+#define S3VDRM_MMIO_R16(addr) ioread16(addr)
+#define S3VDRM_MMIO_W16(addr, val) iowrite16(val, addr)
 #define S3VDRM_IO_R8(addr) inb(addr)
 #define S3VDRM_IO_W8(addr, val) outb(val, addr)
 
@@ -28,5 +30,9 @@
   S3VDRM_MMIO_R8(base + S3VDRM_CONF_REG_OFFSET + offset)
 #define S3VDRM_REG_W8(base, offset, val)			\
   S3VDRM_MMIO_W8(base + S3VDRM_CONF_REG_OFFSET + offset, val)
+#define S3VDRM_REG_R16(base, offset)				\
+  S3VDRM_MMIO_R16(base + S3VDRM_CONF_REG_OFFSET + offset)
+#define S3VDRM_REG_W16(base, offset, val)			\
+  S3VDRM_MMIO_W16(base + S3VDRM_CONF_REG_OFFSET + offset, val)
 
 #endif
