@@ -28,6 +28,10 @@
 #define S3VDRM_MISC_REG_W 0x3C2
 #define S3VDRM_MISC_REG_R 0x3CC
 
+// Sequencer
+#define S3VDRM_SEQ_INDEX  0x3C4
+#define S3VDRM_SEQ_DATA   0x3C5
+
 // CRTC
 #define S3VDRM_CRTC_INDEX 0x3B4 // shiftable
 #define S3VDRM_CRTC_DATA  0x3B5 // shiftable

@@ -7,18 +7,60 @@
 #include "s3vdrm_hw.h"
 #include "../s3vdrm_io_macros.h"
 
-u8 S3vdrm_vga_r8(void* base, u8 id, bool shift) {
-  S3VDRM_REG_W8(base, S3VDRM_CRTC_INDEX + (shift ? S3VDRM_REG_SHIFT : 0), id);
-  return S3VDRM_REG_R8(base, S3VDRM_CRTC_DATA +(shift ? S3VDRM_REG_SHIFT : 0));  
+/***
+ ** general purpose functions
+ */
+
+// Sequencer access
+
+u8 S3vdrm_seq_r8(void* base, u8 id) {
+  S3VDRM_REG_W8(base, S3VDRM_SEQ_INDEX, id);
+  return S3VDRM_REG_R8(base, S3VDRM_SEQ_DATA);  
 }  
 
-void S3vdrm_vga_w8(void* base, u8 id, bool shift, u8 val) {
+void S3vdrm_seq_w8(void* base, u8 id, u8 val) {
+  S3VDRM_REG_W8(base, S3VDRM_SEQ_INDEX, id);
+  S3VDRM_REG_W8(base, S3VDRM_SEQ_DATA, val);
+}
+
+// CRTC access
+
+u8 S3vdrm_crtc_r8(void* base, u8 id, bool shift) {
+  S3VDRM_REG_W8(base, S3VDRM_CRTC_INDEX + (shift ? S3VDRM_REG_SHIFT : 0), id);
+  return S3VDRM_REG_R8(base, S3VDRM_CRTC_DATA + (shift ? S3VDRM_REG_SHIFT : 0));  
+}  
+
+void S3vdrm_crtc_w8(void* base, u8 id, bool shift, u8 val) {
   S3VDRM_REG_W8(base, S3VDRM_CRTC_INDEX + (shift ? S3VDRM_REG_SHIFT : 0), id);
   S3VDRM_REG_W8(base, S3VDRM_CRTC_DATA + (shift ? S3VDRM_REG_SHIFT : 0), val);
 }
 
 /***
- ** Some PCI Virge cards have mmio disabled in their BIOS and require manual
+ ** extended registers locking/unlocking
+ */
+
+void S3vdrm_unlock_regs(void *base, bool shift) {
+  S3vdrm_seq_w8(base, 0x08, 0x06); // SR9 - SRff
+  S3vdrm_crtc_w8(base, 0x38, shift, 0x48); // CR2d - CR3f
+  S3vdrm_crtc_w8(base, 0x39, shift, 0xa5); // CR40 - CRff
+}
+
+void S3vdrm_lock_regs(void *base, bool shift) {
+  u8 cr40;
+
+  // here should be detection code for S3D busyness
+  
+  cr40 = S3vdrm_crtc_r8(base, 0x40, shift); // disable enhanced reg access
+  cr40 &= 0b11111110;
+  S3vdrm_crtc_w8(base, 0x40, shift, cr40);
+
+  S3vdrm_seq_w8(base, 0x08, 0x00); // remove register access codes
+  S3vdrm_crtc_w8(base, 0x38, shift, 0x00);
+  S3vdrm_crtc_w8(base, 0x39, shift, 0x00);
+}
+
+/***
+ ** Some PCI Virge cards have mmio disabled by their BIOS and require manual
  ** enabling through I/O bus (bit 3 of CR53 register must be a 1 for new MMIO).
  */
 
