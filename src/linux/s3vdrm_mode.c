@@ -14,6 +14,7 @@ static struct drm_mode_config_funcs s3vdrm_mode_config_funcs = {
 };
 
 int s3vdrm_mode_init(struct s3vdrm_device *s3v) {
+  enum s3vdrm_error error;
   struct drm_device *drm = &s3v->drm;
   int ret;
 
@@ -28,7 +29,22 @@ int s3vdrm_mode_init(struct s3vdrm_device *s3v) {
   drm->mode_config.preferred_depth = 8;
   drm->mode_config.funcs = &s3vdrm_mode_config_funcs;
 
-  s3vdrm_hw_probe(s3v->mmio, &s3v->status);
+  error = S3vdrm_hw_probe(s3v->mmio, &s3v->status);
+  if (error) {
+    switch (error) {
+      case PROBE_CARD_UNRECOGNISEABLE:
+	pr_crit("Device ID inconsistentcy.");
+	break;
+      case PROBE_CARD_UNRESPONSIVE:
+	pr_crit("Device MMIO could not been enabled.");
+	break;
+      case PROBE_BAD_VRAM:
+	pr_crit("VRAM size could not been read.");
+	break;
+      default: break;
+    }
+    return -1;
+  }
 
   pr_info("misc register status: %x", s3v->status.regs.vga_regs.misc);
   pr_info("cr0 register status: %x", s3v->status.regs.vga_regs.cr0);

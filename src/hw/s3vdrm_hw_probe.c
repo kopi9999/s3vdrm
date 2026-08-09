@@ -33,28 +33,33 @@ static u32 s3vdrm_get_vram_size(void *base, bool shift) {
   } 
 }
 
-void s3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat) {
+enum s3vdrm_error S3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat) {
   bool shift = false;
   u8 misc;
-
-  s3v_stat->card_type = s3vdrm_get_card_type(base);
 
   misc = S3VDRM_REG_R8(base, S3VDRM_MISC_REG_R);
   
   if (misc & 0b00010000) { //ensure working i/o
     S3vdrm_enable_mmio();
     misc = S3VDRM_REG_R8(base, S3VDRM_MISC_REG_R);
+    if (misc & 0b00010000) {return PROBE_CARD_UNRESPONSIVE;}
   }
-
   s3v_stat->regs.vga_regs.misc = misc;
   if (s3v_stat->regs.vga_regs.misc & 0b00000001) {shift = true;} //get shift
 
+  s3v_stat->card_type = s3vdrm_get_card_type(base);
+  if (s3v_stat->card_type == BAD_CARD) { // kernel check just in case
+    return PROBE_CARD_UNRECOGNISEABLE;
+  }
+
   S3vdrm_unlock_regs(base, shift);
-  
-  s3v_stat->vram_size = s3vdrm_get_vram_size(base, shift);
+
+  s3v_stat->vram_size = s3vdrm_get_vram_size(base, shift); // get vram size
+  if (!s3v_stat->vram_size) {return PROBE_BAD_VRAM;}
 
   s3v_stat->regs.vga_regs.cr0 = S3vdrm_crtc_r8(base, 0, shift);
   s3v_stat->regs.vga_regs.cr1 = S3vdrm_seq_r8(base, 0x01);
 
   S3vdrm_lock_regs(base, shift);
+  return SUCCESS;
 }

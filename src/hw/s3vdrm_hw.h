@@ -29,6 +29,6 @@ void S3vdrm_enable_mmio(void);
 
 
 // s3vdrm_hw_probe.c
-void s3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat);
+enum s3vdrm_error S3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat);
 
 #endif

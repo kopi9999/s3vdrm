@@ -19,6 +19,14 @@ enum s3vdrm_card_type {
   VIRGE_DX_GX
 };
 
+enum s3vdrm_error {
+  SUCCESS,
+
+  PROBE_CARD_UNRECOGNISEABLE,
+  PROBE_CARD_UNRESPONSIVE,
+  PROBE_BAD_VRAM
+};
+
 /***
  ** structs
  */
