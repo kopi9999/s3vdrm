@@ -23,9 +23,10 @@ struct s3vdrm_device {
 };
 
 /***
- ** driver exported functions
+ ** exported functions
  */
 
-int s3vdrm_mode_init(struct s3vdrm_device *s3v, u16 device_id);
+int s3vdrm_mode_init(struct s3vdrm_device *s3v);
+int s3vdrm_probe(void __iomem *base, struct s3v_status *status, u16 device_id);
 
 #endif

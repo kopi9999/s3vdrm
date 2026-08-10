@@ -49,9 +49,14 @@ static int s3vdrm_pci_probe(struct pci_dev *pdev,
   s3v->mmio = pcim_iomap(pdev, 0, 0);
   if (!s3v->mmio) {return -ENOMEM;}
 
-  // start of init
+  // probe card
 
-  ret = s3vdrm_mode_init(s3v, pdev->device);
+  ret = s3vdrm_probe(s3v->mmio, &s3v->status, pdev->device);
+  if (ret) {return ret;}
+  
+  // start of init
+  
+  ret = s3vdrm_mode_init(s3v);
   if (ret) {return ret;}
   
   // end of init

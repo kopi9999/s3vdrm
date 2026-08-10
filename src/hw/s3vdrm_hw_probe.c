@@ -33,16 +33,12 @@ enum s3vdrm_error S3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat,
     misc = S3VDRM_REG_R8(base, S3VDRM_MISC_REG_R);
     if (misc & 0b00010000) {return PROBE_CARD_UNRESPONSIVE;}
   }
-  s3v_stat->regs.vga_regs.misc = misc;
-  if (s3v_stat->regs.vga_regs.misc & 0b00000001) {shift = true;} //get shift
+  if (misc & 0b00000001) {shift = true;} //get shift
 
   S3vdrm_unlock_regs(base, shift);
 
   s3v_stat->vram_size = s3vdrm_get_vram_size(base, shift); // get vram size
   if (!s3v_stat->vram_size) {return PROBE_BAD_VRAM;}
-
-  s3v_stat->regs.vga_regs.cr0 = S3vdrm_crtc_r8(base, 0, shift);
-  s3v_stat->regs.vga_regs.cr1 = S3vdrm_seq_r8(base, 0x01);
 
   S3vdrm_lock_regs(base, shift);
   return SUCCESS;
