@@ -26,6 +26,6 @@ struct s3vdrm_device {
  ** driver exported functions
  */
 
-int s3vdrm_mode_init(struct s3vdrm_device *s3v);
+int s3vdrm_mode_init(struct s3vdrm_device *s3v, u16 device_id);
 
 #endif

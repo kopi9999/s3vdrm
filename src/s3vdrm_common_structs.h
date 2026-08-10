@@ -13,16 +13,9 @@
  ** enums
  */
 
-enum s3vdrm_card_type {
-  BAD_CARD,
-  VIRGE,
-  VIRGE_DX_GX
-};
-
 enum s3vdrm_error {
   SUCCESS,
 
-  PROBE_CARD_UNRECOGNISEABLE,
   PROBE_CARD_UNRESPONSIVE,
   PROBE_BAD_VRAM
 };
@@ -47,8 +40,8 @@ struct s3v_regs {
 
 struct s3v_status {
   struct s3v_regs regs;
-  enum s3vdrm_card_type card_type; // type of detected card 
-  bool shift;                      // crtc regs address shift
+  u16 device_id;        // copy of device id used for drivers's hw side 
+  bool shift;           // crtc regs address shift
   u32 vram_size;
 };
 

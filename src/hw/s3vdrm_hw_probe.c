@@ -7,20 +7,6 @@
 #include "s3vdrm_hw.h"
 #include "../s3vdrm_dev_ids.h"
 
-static enum s3vdrm_card_type s3vdrm_get_card_type(void *base) {
-  u16 vendor_id, device_id;
-
-  vendor_id = S3VDRM_REG_R16(base, 0x00);
-  if (vendor_id != S3VDRM_S3_VENDOR_ID) {return BAD_CARD;}
-
-  device_id = S3VDRM_REG_R16(base, 0x02);
-  switch (device_id) {
-    case S3VDRM_VIRGE_DEV_ID:       return VIRGE;
-    case S3VDRM_VIRGE_DX_GX_DEV_ID: return VIRGE_DX_GX;
-    default:                        return BAD_CARD;
-  }
-}
-
 static u32 s3vdrm_get_vram_size(void *base, bool shift) {
   u8 cr36;
   
@@ -33,9 +19,12 @@ static u32 s3vdrm_get_vram_size(void *base, bool shift) {
   } 
 }
 
-enum s3vdrm_error S3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat) {
+enum s3vdrm_error S3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat,
+                                  u16 dev_id) {  
   bool shift = false;
   u8 misc;
+
+  s3v_stat->device_id = dev_id;
 
   misc = S3VDRM_REG_R8(base, S3VDRM_MISC_REG_R);
   
@@ -46,11 +35,6 @@ enum s3vdrm_error S3vdrm_hw_probe(void *base, struct s3v_status *s3v_stat) {
   }
   s3v_stat->regs.vga_regs.misc = misc;
   if (s3v_stat->regs.vga_regs.misc & 0b00000001) {shift = true;} //get shift
-
-  s3v_stat->card_type = s3vdrm_get_card_type(base);
-  if (s3v_stat->card_type == BAD_CARD) { // kernel check just in case
-    return PROBE_CARD_UNRECOGNISEABLE;
-  }
 
   S3vdrm_unlock_regs(base, shift);
 
